@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Permission Request</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      text-align: center;
+    }
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      margin: 10px;
+      cursor: pointer;
+    }
+    #status {
+      margin-top: 20px;
+      font-weight: bold;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <h1>Permission Request Demo</h1>
+  <button onclick="requestNotification()">Request Notification</button>
+  <button onclick="requestLocation()">Request GPS Location</button>
+
+  <div id="status"></div>
+
+  <script>
+    function requestNotification() {
+      if (!('Notification' in window)) {
+        alert("This browser doesn't support notifications.");
+        return;
+      }
+
+      Notification.requestPermission().then(function(permission) {
+        document.getElementById('status').innerText =
+          'Notification permission: ' + permission;
+
+        if (permission === 'granted') {
+          new Notification('Thanks for allowing notifications!');
+        }
+      });
+    }
+
+    function requestLocation() {
+      if (!navigator.geolocation) {
+        alert("Geolocation is not supported by this browser.");
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        function(position) {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          document.getElementById('status').innerText =
+            `Location Access Granted:\nLatitude: ${lat}, Longitude: ${lon}`;
+        },
+        function(error) {
+          document.getElementById('status').innerText =
+            'Error: ' + error.message;
+        }
+      );
+    }
+  </script>
+</body>
+</html>
